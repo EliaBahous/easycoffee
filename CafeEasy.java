@@ -7,7 +7,7 @@ public class CafeEasy {
 
         cafeSystem.addMenuItem("Coffee", 5.99, 100);
         cafeSystem.addMenuItem("Cake", 3.99, 50);
-
+        cafeSystem.applyDiscount("Coffee", 10); 
         Waiter waiter = new Waiter();
         //waiter.takeOrder(cafeSystem, 1, "Coffee", 2);
         //waiter.takeOrder(cafeSystem, 2, "Cake", 1);

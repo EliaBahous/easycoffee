@@ -1,6 +1,5 @@
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CafeSystem {
     List<Table> tables;
@@ -140,5 +139,15 @@ public class CafeSystem {
             }
         }
         return null;
+    }
+
+    public void applyDiscount(String itemName, double discountPercentage) {
+        MenuItem menuItem = findMenuItem(itemName);
+        if (menuItem != null) {
+            menuItem.setDiscount(discountPercentage);
+            System.out.println("Discount applied to " + itemName);
+        } else {
+            System.out.println("Menu item not found.");
+        }
     }
 }
