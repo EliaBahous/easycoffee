@@ -24,3 +24,12 @@ CREATE TABLE Orders (
     CONSTRAINT FK_MenuItem_Order FOREIGN KEY (menu_item_id) REFERENCES MenuItems(item_id)
 );
 
+-- Insert values to Tables(adding 2 tables)
+insert into [dbo].[Tables] values (1,0);
+insert into [dbo].[Tables] values (2,0);
+
+--
+insert into [dbo].[MenuItems] values 
+('Coffe',14,10,0,0);
+insert into [dbo].[MenuItems] values 
+('Cake',35,10,0,0);
