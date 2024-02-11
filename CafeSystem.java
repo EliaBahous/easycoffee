@@ -14,14 +14,9 @@ public class CafeSystem {
     final double LOW_STOCK_THRESHOLD = 0.2;
     Connection connection = null;
     Statement statement = null;
-    String connectionUrl =
-    "jdbc:sqlserver://metadatasqldb.database.windows.net:1433;"
-            + "database=easycafe;"
-            + "user=metadatasqldb;"
-            + "password=Uh995512.;"
-            + "encrypt=true;"
-            + "trustServerCertificate=false;"
-            + "loginTimeout=30;";
+    DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+    String connectionString = dbConnection.getConnectionString();
+
     public CafeSystem() {
         this.tables = new ArrayList<>();
         this.menu = new ArrayList<>();
@@ -31,7 +26,7 @@ public class CafeSystem {
     public void addTable(int tableNumber) {
         String query = "INSERT INTO [dbo].[Tables] ([table_number], [is_occupied]) VALUES (?, ?)";
         int isOccupied = 0; // default for new table is 0
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
+        try (Connection connection = DriverManager.getConnection(connectionString);
             PreparedStatement stmt = connection.prepareStatement(query)) {
 
             // Set values for the prepared statement
@@ -58,7 +53,7 @@ public class CafeSystem {
         String query = "INSERT INTO [dbo].[MenuItems] ([item_name], [price], [quantity_in_stock], [total_sold], [discount]) VALUES (?, ?, ?, ?, ?)";
         String selectSql = "SELECT COUNT(*) AS itemExists FROM [dbo].[MenuItems] WHERE [item_name] = ?";
 
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
+        try (Connection connection = DriverManager.getConnection(connectionString);
         PreparedStatement stmt = connection.prepareStatement(query);
         PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
 
@@ -211,7 +206,7 @@ public class CafeSystem {
         MenuItem menuItem = null;
         String query =  "SELECT * FROM [dbo].[MenuItems] WHERE [item_name] = ?";
 
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
+        try (Connection connection = DriverManager.getConnection(connectionString);
         PreparedStatement stmt = connection.prepareStatement(query)) {
 
         // Set values for the prepared statement
