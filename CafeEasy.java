@@ -9,8 +9,8 @@ public class CafeEasy {
        // cafeSystem.addMenuItem("Cake", 3.99, 50); 
         //cafeSystem.applyDiscount("Coffee", 13); 
        
-       // Waiter waiter = new Waiter();
-        //waiter.takeOrder(cafeSystem, 1, "Coffee", 2);
+       Waiter waiter = new Waiter();
+        waiter.takeOrder(cafeSystem, 1, "Coffee", 2);
         //waiter.takeOrder(cafeSystem, 2, "Cake", 1);
 
       /*   Customer customer = new Customer("John Doe");

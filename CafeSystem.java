@@ -209,12 +209,25 @@ public class CafeSystem {
     }
 
     private Table findTable(int tableNumber) {
-        for (Table table : tables) {
-            if (table.tableNumber == tableNumber) {
-                return table;
-            }
+        String query = "SELECT * FROM [dbo].[Tables] where table_number =? ;";
+        Table table = null;
+        try(Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement stmt = connection.prepareStatement(query)){
+                   // Set values for the prepared statement
+        stmt.setInt(1, tableNumber);
+        
+        ResultSet resultSet = stmt.executeQuery();
+        resultSet.next();
+        //creating table with table number and is_occupied
+        System.out.println("occupiied");
+        System.out.println(resultSet.getInt(3));
+        table = new Table(tableNumber,resultSet.getInt(3));
+
+        }catch(SQLException e){
+            e.printStackTrace();
         }
-        return null;
+      
+        return table;
     }
 
     private MenuItem findMenuItem(String itemName) {
