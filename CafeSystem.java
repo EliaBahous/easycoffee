@@ -237,7 +237,7 @@ public class CafeSystem {
     }
 
     public void applyDiscount(String itemName, double discountPercentage) {
-        MenuItem menuItem = findMenuItem("sally");
+        MenuItem menuItem = findMenuItem(itemName);
         if (menuItem != null) {
             menuItem.setDiscount(itemName,discountPercentage);
             System.out.println("Discount applied to " + itemName);

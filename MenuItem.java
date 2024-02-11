@@ -33,9 +33,9 @@ public class MenuItem {
         this.discount = discount; //intially no discount
     }
        // Getter and setter methods for discount
-       public double getDiscount() {
+    /*    public double getDiscount() {
         return discount;
-    }
+    } */
 
     public void setDiscount(String itemName,double discount) {
         String updateSql = "UPDATE [dbo].[MenuItems] SET [discount] = ? WHERE [item_name] = ?";
