@@ -218,15 +218,10 @@ public class CafeSystem {
         
         ResultSet resultSet = stmt.executeQuery();
         resultSet.next();
-        //creating table with table number and is_occupied
-        System.out.println("occupiied");
-        System.out.println(resultSet.getInt(3));
         table = new Table(tableNumber,resultSet.getInt(3));
-
         }catch(SQLException e){
             e.printStackTrace();
-        }
-      
+        }  
         return table;
     }
 
