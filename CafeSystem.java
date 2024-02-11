@@ -25,11 +25,25 @@ public class CafeSystem {
 
     public void addTable(int tableNumber) {
         String query = "INSERT INTO [dbo].[Tables] ([table_number], [is_occupied]) VALUES (?, ?)";
+        String selectSql = "SELECT COUNT(*) AS tableExists FROM [dbo].[Tables] WHERE [table_number] = ?";
+
         int isOccupied = 0; // default for new table is 0
         try (Connection connection = DriverManager.getConnection(connectionString);
-            PreparedStatement stmt = connection.prepareStatement(query)) {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
+            
+            // check if table exists 
+            selectStmt.setInt(1,tableNumber);
+            ResultSet resultSet = selectStmt.executeQuery();
+            resultSet.next();
+            int tableExists = resultSet.getInt("tableExists");
+    
 
-            // Set values for the prepared statement
+            if(tableExists > 0){
+                System.out.println("Table already exists in the database. Skipping insertion.");
+
+            }else {
+           // Set values for the prepared statement
             stmt.setInt(1, tableNumber);
             stmt.setInt(2, isOccupied);
 
@@ -43,6 +57,7 @@ public class CafeSystem {
             }
            // add instance to Tables local list.
               tables.add(new Table(tableNumber));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
