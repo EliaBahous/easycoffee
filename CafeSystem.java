@@ -1,3 +1,9 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -6,19 +12,88 @@ public class CafeSystem {
     List<MenuItem> menu;
     Set<String> lowStockItems;
     final double LOW_STOCK_THRESHOLD = 0.2;
-
+    Connection connection = null;
+    Statement statement = null;
+    String connectionUrl =
+    "jdbc:sqlserver://metadatasqldb.database.windows.net:1433;"
+            + "database=easycafe;"
+            + "user=metadatasqldb;"
+            + "password=Uh995512.;"
+            + "encrypt=true;"
+            + "trustServerCertificate=false;"
+            + "loginTimeout=30;";
     public CafeSystem() {
         this.tables = new ArrayList<>();
         this.menu = new ArrayList<>();
-        this.lowStockItems = new HashSet<>();
+        this.lowStockItems = new HashSet<>();  
     }
 
     public void addTable(int tableNumber) {
-        tables.add(new Table(tableNumber));
+        String query = "INSERT INTO [dbo].[Tables] ([table_number], [is_occupied]) VALUES (?, ?)";
+        int isOccupied = 0; // default for new table is 0
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+            PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            // Set values for the prepared statement
+            stmt.setInt(1, tableNumber);
+            stmt.setInt(2, isOccupied);
+
+            // Execute the query
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Table added successfully!");
+            } else {
+                System.out.println("Failed to add table.");
+            }
+           // add instance to Tables local list.
+              tables.add(new Table(tableNumber));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
     }
 
     public void addMenuItem(String itemName, double price, double quantityInStock) {
-        menu.add(new MenuItem(itemName, price, quantityInStock));
+        String query = "INSERT INTO [dbo].[MenuItems] ([item_name], [price], [quantity_in_stock], [total_sold], [discount]) VALUES (?, ?, ?, ?, ?)";
+        String selectSql = "SELECT COUNT(*) AS itemExists FROM [dbo].[MenuItems] WHERE [item_name] = ?";
+
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+        PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
+
+        selectStmt.setString(1, itemName);
+        ResultSet resultSet = selectStmt.executeQuery();
+        resultSet.next();
+        int itemExists = resultSet.getInt("itemExists");
+
+        if (itemExists > 0) {
+            System.out.println("Menu item already exists in the database. Skipping insertion.");
+        }else{
+       
+        // Set values for the prepared statement
+        stmt.setString(1, itemName);
+        stmt.setDouble(2, price);
+        stmt.setDouble(3, quantityInStock);
+        //default values for total sold and discount
+        stmt.setInt(4, 0); 
+        stmt.setInt(5, 0); 
+
+        // Execute the query
+        int rowsAffected = stmt.executeUpdate();
+
+        if (rowsAffected > 0) {
+            //update local list
+            menu.add(new MenuItem(itemName, price, quantityInStock));
+            System.out.println("MenuItem added successfully!");
+        } else {
+            System.out.println("Failed to add MEnuItem.");
+        }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
     }
 
     public void placeOrder(int tableNumber, String itemName, int quantity) {
@@ -133,18 +208,38 @@ public class CafeSystem {
     }
 
     private MenuItem findMenuItem(String itemName) {
-        for (MenuItem menuItem : menu) {
-            if (menuItem.itemName.equals(itemName)) {
-                return menuItem;
-            }
-        }
-        return null;
+        MenuItem menuItem = null;
+        String query =  "SELECT * FROM [dbo].[MenuItems] WHERE [item_name] = ?";
+
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+        PreparedStatement stmt = connection.prepareStatement(query)) {
+
+        // Set values for the prepared statement
+        stmt.setString(1, itemName);
+        
+        ResultSet resultSet = stmt.executeQuery();
+
+        // Check if a result was returned
+        if (resultSet.next()) {
+                // Retrieve data from the result set and create a MenuItem object
+            String name = resultSet.getString("item_name");
+            double price = resultSet.getDouble("price");
+            int quantityInStock = resultSet.getInt("quantity_in_stock");
+            int totalSold = resultSet.getInt("total_sold");
+            double discount = resultSet.getDouble("discount");
+                
+            menuItem = new MenuItem(name, price, quantityInStock, totalSold, discount);
+            }     
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return menuItem;
     }
 
     public void applyDiscount(String itemName, double discountPercentage) {
-        MenuItem menuItem = findMenuItem(itemName);
+        MenuItem menuItem = findMenuItem("sally");
         if (menuItem != null) {
-            menuItem.setDiscount(discountPercentage);
+            menuItem.setDiscount(itemName,discountPercentage);
             System.out.println("Discount applied to " + itemName);
         } else {
             System.out.println("Menu item not found.");
