@@ -69,4 +69,27 @@ public class MenuItem {
         double discountedPrice = price * (1 - discount / 100);
         System.out.println("Discounted price for " + itemName + ": $" + discountedPrice);
     }
+
+    public void updateMenuItem(MenuItem menu){
+      //update DB with new quantities 
+      String updateSql = "UPDATE [dbo].[MenuItems] SET [quantity_in_stock] = ?,[total_sold] = ? WHERE [item_name] = ?";
+            try (Connection conn = DriverManager.getConnection(connectionString);
+           PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+
+          // Set the discount and item name parameters in the prepared statement
+          updateStmt.setDouble(1, menu.quantityInStock);
+          updateStmt.setInt(2, menu.totalSold);
+          updateStmt.setString(3, menu.itemName);
+
+          // Execute the update query
+          int rowsAffected = updateStmt.executeUpdate();
+          if (rowsAffected == 0) {
+              System.out.println("No menu item found with name: " + itemName);
+          } else {
+              System.out.println("Quantity and total sold updated successfully for menu item: " + itemName);
+          }
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+    }
 }

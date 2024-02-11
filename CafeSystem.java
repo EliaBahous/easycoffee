@@ -115,9 +115,9 @@ public class CafeSystem {
             table.addOrderItem(tableNumber,orderItem);
             menuItem.quantityInStock -= quantity;
             menuItem.totalSold += quantity;
-
+             
             // update DB with Order and change table to occupied 
-
+            menuItem.updateMenuItem(menuItem);
             System.out.println("Order placed successfully.");
         } else if (menuItem != null && menuItem.quantityInStock < quantity) {
             System.out.println("Insufficient stock for item: " + itemName);
