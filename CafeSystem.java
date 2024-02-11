@@ -110,15 +110,21 @@ public class CafeSystem {
         Table table = findTable(tableNumber);
         MenuItem menuItem = findMenuItem(itemName);
 
-        if (table != null && menuItem != null && menuItem.quantityInStock >= quantity) {
+        if (table != null && !table.isOccupied && menuItem != null && menuItem.quantityInStock >= quantity) {
             OrderItem orderItem = new OrderItem(menuItem, quantity);
-            table.addOrderItem(orderItem);
+            table.addOrderItem(tableNumber,orderItem);
             menuItem.quantityInStock -= quantity;
             menuItem.totalSold += quantity;
+
+            // update DB with Order and change table to occupied 
+
             System.out.println("Order placed successfully.");
         } else if (menuItem != null && menuItem.quantityInStock < quantity) {
             System.out.println("Insufficient stock for item: " + itemName);
-        } else {
+        } else if(table.isOccupied){
+            System.out.println("Table is already Occupied.");
+        }
+          else {
             System.out.println("Invalid table number or menu item.");
         }
     }

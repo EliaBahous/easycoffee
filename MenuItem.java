@@ -9,6 +9,7 @@ public class MenuItem {
     double quantityInStock;
     int totalSold;
     double discount;
+    int itemId;
     DatabaseConnection dbConnection = DatabaseConnection.getInstance();
     String connectionString = dbConnection.getConnectionString();
     public MenuItem(String itemName, double price, double quantityInStock) {
@@ -25,6 +26,16 @@ public class MenuItem {
         this.quantityInStock = quantityInStock;
         this.totalSold = total_sold;
         this.discount = discount; //intially no discount
+    }
+
+    // when placing an order we have menu item id 
+    public MenuItem(int id,String itemName, double price, double quantityInStock, int total_sold,double discount) {
+        this.itemName = itemName;
+        this.price = price;
+        this.quantityInStock = quantityInStock;
+        this.totalSold = total_sold;
+        this.discount = discount; //intially no discount
+        this.itemId = id;
     }
        // Getter and setter methods for discount
     /*    public double getDiscount() {
