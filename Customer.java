@@ -1,5 +1,7 @@
 public class Customer {
     String name;
+    int id;
+    
 
     public Customer(String name) {
         this.name = name;
@@ -9,7 +11,7 @@ public class Customer {
         cafeSystem.placeOrder(tableNumber, itemName, quantity);
     }
 
-    public void payBill(CafeSystem cafeSystem) {
-        cafeSystem.recordPayment();
+    public void payBill(CafeSystem cafeSystem, int tableNumber) {
+        cafeSystem.recordPayment(tableNumber);
     }
 }

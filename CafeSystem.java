@@ -111,13 +111,16 @@ public class CafeSystem {
         MenuItem menuItem = findMenuItem(itemName);
 
         if (table != null && !table.isOccupied && menuItem != null && menuItem.quantityInStock >= quantity) {
-            OrderItem orderItem = new OrderItem(menuItem, quantity);
+            OrderItem orderItem = new OrderItem(menuItem, quantity,tableNumber);
+            System.out.print("from order");
+            System.err.println(orderItem.menuItem.itemId);
             table.addOrderItem(tableNumber,orderItem);
             menuItem.quantityInStock -= quantity;
             menuItem.totalSold += quantity;
-             
-            // update DB with Order and change table to occupied 
+            //update quantity for menu 
             menuItem.updateMenuItem(menuItem);
+            //insert order to orders table 
+            orderItem.insertOrder();
             System.out.println("Order placed successfully.");
         } else if (menuItem != null && menuItem.quantityInStock < quantity) {
             System.out.println("Insufficient stock for item: " + itemName);
@@ -169,20 +172,6 @@ public class CafeSystem {
         }
     }
 
-    public void displayOrder(int tableNumber) {
-        Table table = findTable(tableNumber);
-
-        if (table != null) {
-            System.out.println("Table " + tableNumber + " Order:");
-            List<OrderItem> orderItems = table.getOrderItems();
-            for (OrderItem orderItem : orderItems) {
-                System.out.println(orderItem.menuItem.itemName + " - Quantity: " + orderItem.quantity + " - Ordered on: " + orderItem.orderDate + " - Delivered on: " + orderItem.deliveryDate);
-            }
-        } else {
-            System.out.println("Invalid table number.");
-        }
-    }
-
     public void checkLowStock() {
         for (MenuItem menuItem : menu) {
             if (!lowStockItems.contains(menuItem.itemName) && menuItem.quantityInStock < LOW_STOCK_THRESHOLD * menu.size()) {
@@ -210,7 +199,7 @@ public class CafeSystem {
         }
     }
 
-    public void recordPayment() {
+    public void recordPayment(int talbleNumber) {
         System.out.println("Payment recorded at: " + LocalDateTime.now());
     }
 
@@ -251,8 +240,9 @@ public class CafeSystem {
             int quantityInStock = resultSet.getInt("quantity_in_stock");
             int totalSold = resultSet.getInt("total_sold");
             double discount = resultSet.getDouble("discount");
-                
-            menuItem = new MenuItem(name, price, quantityInStock, totalSold, discount);
+            int itemId = resultSet.getInt("item_id");
+
+            menuItem = new MenuItem(itemId,name, price, quantityInStock, totalSold, discount);
             }     
     } catch (SQLException e) {
         e.printStackTrace();
