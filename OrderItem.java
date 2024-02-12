@@ -47,9 +47,7 @@ public class OrderItem {
 
         // Convert LocalDate to java.sql.Date
         Date sqlDate = Date.valueOf(localDate);
-            System.err.println("menuitem");
-            System.out.println(menuItem.itemId);
-            insertStmt.setInt(1, menuItem.itemId);
+            insertStmt.setInt(1, menuItemId);
             insertStmt.setDouble(2, quantity);
             insertStmt.setDate(3, sqlDate);
             insertStmt.setDate(4, null);

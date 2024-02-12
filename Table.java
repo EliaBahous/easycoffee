@@ -9,18 +9,15 @@ import java.util.List;
 public class Table {
     int tableNumber;
     Boolean isOccupied;
-    List<OrderItem> orderItems;
     DatabaseConnection dbConnection = DatabaseConnection.getInstance();
     String connectionString = dbConnection.getConnectionString();
 
     public Table(int tableNumber) {
         this.tableNumber = tableNumber;
-        this.orderItems = new ArrayList<>();
     }
 
     public Table(int tableNumber,int isOccupied) {
         this.tableNumber = tableNumber;
-        this.orderItems = new ArrayList<>();
         if(isOccupied == 0){
             this.isOccupied = false;
         }
@@ -30,8 +27,6 @@ public class Table {
     }
 
     public void addOrderItem(int tableNumber,OrderItem orderItem) {
-        MenuItem menu = orderItem.menuItem;
-        orderItems.add(orderItem);
        
         String updateSql = "UPDATE [dbo].[Tables] SET [is_occupied] = ? WHERE [table_number] = ?";
 
@@ -76,7 +71,5 @@ public class Table {
             }  
         
     }
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
+ 
 }
