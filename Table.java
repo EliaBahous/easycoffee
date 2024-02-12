@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,27 @@ public class Table {
 
     }
 
+
+    public void clearTable(){
+            String deleteQuery = "DELETE FROM [dbo].[Tables] WHERE [table_number] = ?;";
+            try(Connection connection = DriverManager.getConnection(connectionString);
+            PreparedStatement stmt = connection.prepareStatement(deleteQuery)){
+                       // Set values for the prepared statement
+            stmt.setInt(1, this.tableNumber);
+                // Execute the DELETE statement
+              int rowsAffected = stmt.executeUpdate();
+        
+            // Check the number of rows affected (optional)
+            if (rowsAffected > 0) {
+                System.out.println("Table " + this.tableNumber + " is available now for orders.");
+            } else {
+                System.out.println("No table with number " + this.tableNumber + " found.");
+            }
+            }catch(SQLException e){
+                e.printStackTrace();
+            }  
+        
+    }
     public List<OrderItem> getOrderItems() {
         return orderItems;
     }

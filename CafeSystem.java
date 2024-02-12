@@ -132,19 +132,27 @@ public class CafeSystem {
         }
     }
 
-    public void closeOrder(int tableNumber) {
+    public void cancelOrder(int tableNumber) {
         Table table = findTable(tableNumber);
-
-        if (table != null) {
-            List<OrderItem> orderItems = table.getOrderItems();
-            for (OrderItem orderItem : orderItems) {
-                orderItem.menuItem.quantityInStock += orderItem.quantity;
-            }
-            table.getOrderItems().clear();
-            System.out.println("Order closed successfully.");
-        } else {
-            System.out.println("Invalid table number.");
+        if(table == null){
+          System.out.println("Invalid table number or Table not found.");
+        }else {
+            String deleteQuery = "DELETE FROM [dbo].[Orders] WHERE [table_number] = ?;";
+            try(Connection connection = DriverManager.getConnection(connectionString);
+            PreparedStatement stmt = connection.prepareStatement(deleteQuery)){
+                       // Set values for the prepared statement
+            stmt.setInt(1, tableNumber);
+            
+            int rowsAffected = stmt.executeUpdate();
+            if(rowsAffected > 0){
+               System.out.println("All Orders for tableNumber" + tableNumber + "Where canceled successfully");
+            }else 
+             System.out.println("No Orders found for tablenumber:" + tableNumber);
+            }catch(SQLException e){
+                e.printStackTrace();
+            }  
         }
+        table.clearTable(); 
     }
 
     public void changeOrder(int tableNumber, String itemName, int quantity) {

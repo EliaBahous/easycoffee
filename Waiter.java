@@ -3,8 +3,8 @@ public class Waiter {
         cafeSystem.placeOrder(tableNumber, itemName, quantity);
     }
 
-    public void closeOrder(CafeSystem cafeSystem, int tableNumber) {
-        cafeSystem.closeOrder(tableNumber);
+    public void cancelOrder(CafeSystem cafeSystem, int tableNumber) {
+        cafeSystem.cancelOrder(tableNumber);
     }
 
     public void changeOrder(CafeSystem cafeSystem, int tableNumber, String itemName, int quantity) {
