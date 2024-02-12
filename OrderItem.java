@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.sql.Date;
 
 public class OrderItem {
-    MenuItem menuItem;
+    int menuItemId;
     int quantity;
     int tableNumber;
     LocalDateTime orderDate;
@@ -16,8 +16,8 @@ public class OrderItem {
     DatabaseConnection dbConnection = DatabaseConnection.getInstance();
     String connectionString = dbConnection.getConnectionString();
 
-    public OrderItem(MenuItem menuItem, int quantity,int tableNumber) {
-        this.menuItem = new MenuItem(menuItem.itemId,menuItem.itemName, menuItem.price, menuItem.quantityInStock, menuItem.totalSold,menuItem.discount);
+    public OrderItem(int menuItemId, int quantity,int tableNumber) {
+        this.menuItemId = menuItemId;
         this.quantity = quantity;
         this.orderDate = LocalDateTime.now();
         this.tableNumber = tableNumber;

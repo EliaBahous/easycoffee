@@ -111,9 +111,7 @@ public class CafeSystem {
         MenuItem menuItem = findMenuItem(itemName);
 
         if (table != null && !table.isOccupied && menuItem != null && menuItem.quantityInStock >= quantity) {
-            OrderItem orderItem = new OrderItem(menuItem, quantity,tableNumber);
-            System.out.print("from order");
-            System.err.println(orderItem.menuItem.itemId);
+            OrderItem orderItem = new OrderItem(menuItem.itemId, quantity,tableNumber);
             table.addOrderItem(tableNumber,orderItem);
             menuItem.quantityInStock -= quantity;
             menuItem.totalSold += quantity;
