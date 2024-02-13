@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -130,7 +131,7 @@ public class CafeSystem {
         }
     }
 
-    public void cancelOrder(int tableNumber) {
+    public void closeOrder(int tableNumber) {
         Table table = findTable(tableNumber);
         if(table == null){
           System.out.println("Invalid table number or Table not found.");
@@ -143,7 +144,7 @@ public class CafeSystem {
             
             int rowsAffected = stmt.executeUpdate();
             if(rowsAffected > 0){
-               System.out.println("All Orders for tableNumber" + tableNumber + "Where canceled successfully");
+               System.out.println("All Orders for tableNumber" + tableNumber + "Where closed successfully");
             }else 
              System.out.println("No Orders found for tablenumber:" + tableNumber);
             }catch(SQLException e){
@@ -206,7 +207,27 @@ public class CafeSystem {
     }
 
     public void recordPayment(int talbleNumber) {
-        System.out.println("Payment recorded at: " + LocalDateTime.now());
+        String updateQuery = "UPDATE [dbo].[Orders] SET [delivery_date] = ? WHERE table_number = ?";
+
+        try(Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement stmt = connection.prepareStatement(updateQuery)){
+         
+            LocalDateTime deliveryDateTime = LocalDateTime.now();
+            Date sqlDate = Date.valueOf(deliveryDateTime.toLocalDate());
+            
+            stmt.setDate(1, sqlDate);
+            stmt.setInt(2, talbleNumber);
+            int rowsAffected = stmt.executeUpdate();
+            if(rowsAffected > 0){
+                System.out.println("Order is paied for table" + talbleNumber);
+                System.out.println("Payment recorded at: " + deliveryDateTime);
+                closeOrder(talbleNumber); // after payment order is close.
+            }else{
+                System.out.println("Could'nt find orders for table" + talbleNumber);
+            }
+        }catch(SQLException e){
+          e.printStackTrace();
+        }
     }
 
     private Table findTable(int tableNumber) {
