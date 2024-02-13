@@ -10,12 +10,13 @@ public class CafeEasy {
         //cafeSystem.applyDiscount("Coffee", 13); 
        
        Waiter waiter = new Waiter();
-        waiter.takeOrder(cafeSystem, 251, "Coffee", 2);
+        waiter.takeOrder(cafeSystem, 251, "Coffee", 12);
         //waiter.cancelOrder(cafeSystem, 251);
         //waiter.takeOrder(cafeSystem, 2, "Cake", 1);
-
-       Customer customer = new Customer("John Doe");
-       customer.payBill(cafeSystem,251);
+        waiter.changeOrder(cafeSystem, 251, "Coffee", 1);
+      
+        // Customer customer = new Customer("John Doe");
+      // customer.payBill(cafeSystem,251);
 
        // cafeSystem.generateMonthlySalesReport();
        // cafeSystem.generateMonthlySalesGraph();  

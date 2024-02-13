@@ -143,27 +143,26 @@ public class CafeSystem {
     }
 
     public void changeOrder(int tableNumber, String itemName, int quantity) {
-        Table table = findTable(tableNumber);
-        MenuItem menuItem = findMenuItem(itemName);
+        String updateQuery = "UPDATE [dbo].[Orders] SET [quantity] = ? WHERE [table_number] = ? AND  [menu_item_id] = ?";
 
-        if (table != null && menuItem != null && menuItem.quantityInStock + quantity >= 0) {
-            OrderItem existingOrderItem = null;
-            for (OrderItem orderItem : table.getOrderItems()) {
-                if (orderItem.menuItem == menuItem) {
-                    existingOrderItem = orderItem;
-                    break;
-                }
-            }
-            if (existingOrderItem != null) {
-                existingOrderItem.quantity += quantity;
-                menuItem.quantityInStock -= quantity;
-                menuItem.totalSold += quantity;
+        MenuItem menuItem = findMenuItem(itemName);
+        System.out.println("id for menu" + menuItem.itemId);
+        try(Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement stmt = connection.prepareStatement(updateQuery)){
+            
+            stmt.setInt(1, quantity);
+            stmt.setInt(2, tableNumber);
+            stmt.setInt(3, menuItem.itemId);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if(rowsAffected > 0){
                 System.out.println("Order changed successfully.");
-            } else {
-                System.out.println("Item not found in order.");
+            }else{
+                System.out.println("Item not found in order" + tableNumber + "Order");
             }
-        } else {
-            System.out.println("Invalid table number or menu item, or insufficient stock.");
+        }catch(SQLException e){
+          e.printStackTrace();
         }
     }
 
