@@ -119,7 +119,7 @@ public class CafeSystem {
         }
     }
 
-    public void closeOrder(int tableNumber) {
+    public void cancelOrder(int tableNumber) {
         Table table = findTable(tableNumber);
         if(table == null){
           System.out.println("Invalid table number or Table not found.");
@@ -209,7 +209,7 @@ public class CafeSystem {
             if(rowsAffected > 0){
                 System.out.println("Order is paied for table" + talbleNumber);
                 System.out.println("Payment recorded at: " + deliveryDateTime);
-                closeOrder(talbleNumber); // after payment order is close.
+           //     closeOrder(talbleNumber); // after payment order is close.
             }else{
                 System.out.println("Could'nt find orders for table" + talbleNumber);
             }
