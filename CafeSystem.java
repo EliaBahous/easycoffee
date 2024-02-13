@@ -13,8 +13,6 @@ public class CafeSystem {
     List<MenuItem> menu;
     Set<String> lowStockItems;
     final double LOW_STOCK_THRESHOLD = 0.2;
-    Connection connection = null;
-    Statement statement = null;
     DatabaseConnection dbConnection = DatabaseConnection.getInstance();
     String connectionString = dbConnection.getConnectionString();
 
