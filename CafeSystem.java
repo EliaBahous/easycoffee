@@ -9,17 +9,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class CafeSystem {
-    List<Table> tables;
-    List<MenuItem> menu;
-    Set<String> lowStockItems;
     final double LOW_STOCK_THRESHOLD = 0.2;
     DatabaseConnection dbConnection = DatabaseConnection.getInstance();
     String connectionString = dbConnection.getConnectionString();
 
-    public CafeSystem() {
-        this.tables = new ArrayList<>();
-        this.menu = new ArrayList<>();
-        this.lowStockItems = new HashSet<>();  
+    public CafeSystem() { 
     }
 
     public void addTable(int tableNumber) {
@@ -54,8 +48,6 @@ public class CafeSystem {
             } else {
                 System.out.println("Failed to add table.");
             }
-           // add instance to Tables local list.
-              tables.add(new Table(tableNumber));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,8 +84,6 @@ public class CafeSystem {
         int rowsAffected = stmt.executeUpdate();
 
         if (rowsAffected > 0) {
-            //update local list
-            menu.add(new MenuItem(itemName, price, quantityInStock));
             System.out.println("MenuItem added successfully!");
         } else {
             System.out.println("Failed to add MEnuItem.");
@@ -178,12 +168,12 @@ public class CafeSystem {
     }
 
     public void checkLowStock() {
-        for (MenuItem menuItem : menu) {
+      /*   for (MenuItem menuItem : menu) {
             if (!lowStockItems.contains(menuItem.itemName) && menuItem.quantityInStock < LOW_STOCK_THRESHOLD * menu.size()) {
                 lowStockItems.add(menuItem.itemName);
                 System.out.println("Low stock alert: " + menuItem.itemName);
             }
-        }
+        }*/
     }
 
     public void generateMonthlySalesReport() {
