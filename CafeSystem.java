@@ -193,9 +193,28 @@ public class CafeSystem {
             System.out.println();
         }
     }
+    
+    public void closeTable(int tableNumber){
+        String updateQuery = "UPDATE [dbo].[Tables] SET [is_occupied] = ? WHERE [table_number] = ?";
+
+        try(Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement stmt = connection.prepareStatement(updateQuery)){
+            
+            stmt.setInt(1, 0);
+            stmt.setInt(2, tableNumber);
+            int rowsAffected = stmt.executeUpdate();
+            if(rowsAffected > 0){
+                System.out.println("Table " + tableNumber + " is Available For New Orders");
+            }else{
+                System.out.println("Could'nt Free table" + tableNumber + "After Payment");
+            }
+        }catch(SQLException e){
+          e.printStackTrace();
+        }
+    }
 
     public void recordPayment(int tableNumber) {
-        String updateQuery = "UPDATE [dbo].[Orders] SET [delivery_date] = ? WHERE table_number = ?";
+        String updateQuery = "UPDATE [dbo].[Orders] SET [delivery_date] = ? WHERE [table_number] = ?";
 
         try(Connection connection = DriverManager.getConnection(connectionString);
         PreparedStatement stmt = connection.prepareStatement(updateQuery)){
@@ -209,6 +228,7 @@ public class CafeSystem {
             if(rowsAffected > 0){
                 System.out.println("Order is paied for table" + tableNumber);
                 System.out.println("Payment recorded at: " + deliveryDateTime);
+                closeTable(tableNumber);
             }else{
                 System.out.println("Could'nt find orders for table" + tableNumber);
             }

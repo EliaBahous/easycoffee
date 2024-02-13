@@ -15,7 +15,7 @@ public class CafeEasy {
         //waiter.takeOrder(cafeSystem, 2, "Cake", 1);
 
        Customer customer = new Customer("John Doe");
-        customer.payBill(cafeSystem,251);
+       customer.payBill(cafeSystem,251);
 
        // cafeSystem.generateMonthlySalesReport();
        // cafeSystem.generateMonthlySalesGraph();  
