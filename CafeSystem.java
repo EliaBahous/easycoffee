@@ -194,7 +194,7 @@ public class CafeSystem {
         }
     }
 
-    public void recordPayment(int talbleNumber) {
+    public void recordPayment(int tableNumber) {
         String updateQuery = "UPDATE [dbo].[Orders] SET [delivery_date] = ? WHERE table_number = ?";
 
         try(Connection connection = DriverManager.getConnection(connectionString);
@@ -204,14 +204,13 @@ public class CafeSystem {
             Date sqlDate = Date.valueOf(deliveryDateTime.toLocalDate());
             
             stmt.setDate(1, sqlDate);
-            stmt.setInt(2, talbleNumber);
+            stmt.setInt(2, tableNumber);
             int rowsAffected = stmt.executeUpdate();
             if(rowsAffected > 0){
-                System.out.println("Order is paied for table" + talbleNumber);
+                System.out.println("Order is paied for table" + tableNumber);
                 System.out.println("Payment recorded at: " + deliveryDateTime);
-           //     closeOrder(talbleNumber); // after payment order is close.
             }else{
-                System.out.println("Could'nt find orders for table" + talbleNumber);
+                System.out.println("Could'nt find orders for table" + tableNumber);
             }
         }catch(SQLException e){
           e.printStackTrace();
