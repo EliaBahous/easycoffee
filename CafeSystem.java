@@ -100,7 +100,7 @@ public class CafeSystem {
         Double updatedQuantity = menuItem.getQuantityInStock();
         int updatedTotalSold = menuItem.getTotalSold();
 
-        if (table != null && !table.isOccupied && menuItem != null && menuItem.getQuantityInStock() >= quantity) {
+        if (table != null && !table.getIsOccupied() && menuItem != null && menuItem.getQuantityInStock() >= quantity) {
             OrderItem orderItem = new OrderItem(menuItem.getItemId(), quantity,tableNumber);
             table.addOrderItem(tableNumber,orderItem);
             updatedQuantity -= quantity;
@@ -114,7 +114,7 @@ public class CafeSystem {
             System.out.println("Order placed successfully.");
         } else if (menuItem != null && menuItem.getQuantityInStock() < quantity) {
             System.out.println("Insufficient stock for item: " + itemName);
-        } else if(table !=null && table.isOccupied){
+        } else if(table !=null && table.getIsOccupied()){
             System.out.println("Table is already Occupied.");
         }
           else {

@@ -4,10 +4,42 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Table {
-    int tableNumber;
-    Boolean isOccupied;
-    DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-    String connectionString = dbConnection.getConnectionString();
+    private int tableNumber;
+    private Boolean isOccupied;
+    private DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+    private String connectionString = dbConnection.getConnectionString();
+
+    public int getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(int tableNumber) {
+        this.tableNumber = tableNumber;
+    }
+
+    public Boolean getIsOccupied() {
+        return isOccupied;
+    }
+
+    public void setIsOccupied(Boolean isOccupied) {
+        this.isOccupied = isOccupied;
+    }
+
+    public DatabaseConnection getDbConnection() {
+        return dbConnection;
+    }
+
+    public void setDbConnection(DatabaseConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    public String getConnectionString() {
+        return connectionString;
+    }
+
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
+    }
 
     public Table(int tableNumber) {
         this.tableNumber = tableNumber;

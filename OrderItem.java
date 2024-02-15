@@ -7,13 +7,61 @@ import java.time.LocalDateTime;
 import java.sql.Date;
 
 public class OrderItem {
-    int menuItemId;
-    int quantity;
-    int tableNumber;
-    LocalDateTime orderDate;
-    LocalDateTime deliveryDate;
-    DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-    String connectionString = dbConnection.getConnectionString();
+    private int menuItemId;
+    private int quantity;
+    private int tableNumber;
+    private LocalDateTime orderDate;
+    private LocalDateTime deliveryDate;
+    private DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+    private String connectionString = dbConnection.getConnectionString();
+
+    public int getMenuItemId() {
+        return menuItemId;
+    }
+
+    public void setMenuItemId(int menuItemId) {
+        this.menuItemId = menuItemId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(int tableNumber) {
+        this.tableNumber = tableNumber;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public DatabaseConnection getDbConnection() {
+        return dbConnection;
+    }
+
+    public void setDbConnection(DatabaseConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    public String getConnectionString() {
+        return connectionString;
+    }
+
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
+    }
 
     public OrderItem(int menuItemId, int quantity,int tableNumber) {
         this.menuItemId = menuItemId;
