@@ -3,10 +3,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.*;
+
 
 public class CafeSystem {
     final double LOW_STOCK_THRESHOLD = 0.2;
@@ -98,20 +97,24 @@ public class CafeSystem {
     public void placeOrder(int tableNumber, String itemName, int quantity) {
         Table table = findTable(tableNumber);
         MenuItem menuItem = findMenuItem(itemName);
+        Double updatedQuantity = menuItem.getQuantityInStock();
+        int updatedTotalSold = menuItem.getTotalSold();
 
-        if (table != null && !table.isOccupied && menuItem != null && menuItem.quantityInStock >= quantity) {
-            OrderItem orderItem = new OrderItem(menuItem.itemId, quantity,tableNumber);
+        if (table != null && !table.isOccupied && menuItem != null && menuItem.getQuantityInStock() >= quantity) {
+            OrderItem orderItem = new OrderItem(menuItem.getItemId(), quantity,tableNumber);
             table.addOrderItem(tableNumber,orderItem);
-            menuItem.quantityInStock -= quantity;
-            menuItem.totalSold += quantity;
+            updatedQuantity -= quantity;
+            menuItem.setQuantityInStock(updatedQuantity);
+            updatedTotalSold += quantity;
+            menuItem.setTotalSold(updatedTotalSold);
             //update quantity for menu 
             menuItem.updateMenuItem(menuItem);
             //insert order to orders table 
             orderItem.insertOrder();
             System.out.println("Order placed successfully.");
-        } else if (menuItem != null && menuItem.quantityInStock < quantity) {
+        } else if (menuItem != null && menuItem.getQuantityInStock() < quantity) {
             System.out.println("Insufficient stock for item: " + itemName);
-        } else if(table.isOccupied){
+        } else if(table !=null && table.isOccupied){
             System.out.println("Table is already Occupied.");
         }
           else {
@@ -146,13 +149,13 @@ public class CafeSystem {
         String updateQuery = "UPDATE [dbo].[Orders] SET [quantity] = ? WHERE [table_number] = ? AND  [menu_item_id] = ?";
 
         MenuItem menuItem = findMenuItem(itemName);
-        System.out.println("id for menu" + menuItem.itemId);
+        System.out.println("id for menu" + menuItem.getItemId());
         try(Connection connection = DriverManager.getConnection(connectionString);
         PreparedStatement stmt = connection.prepareStatement(updateQuery)){
             
             stmt.setInt(1, quantity);
             stmt.setInt(2, tableNumber);
-            stmt.setInt(3, menuItem.itemId);
+            stmt.setInt(3, menuItem.getItemId());
 
             int rowsAffected = stmt.executeUpdate();
 
@@ -177,20 +180,20 @@ public class CafeSystem {
 
     public void generateMonthlySalesReport() {
         System.out.println("Monthly Sales Report:");
-        for (MenuItem menuItem : menu) {
+      /*  for (MenuItem menuItem : menu) {
             System.out.println(menuItem.itemName + " - Total Sold: " + menuItem.totalSold);
-        }
+        } */
     }
 
     public void generateMonthlySalesGraph() {
         System.out.println("Monthly Sales Graph:");
-        for (MenuItem menuItem : menu) {
+      /*   for (MenuItem menuItem : menu) {
             System.out.print(menuItem.itemName + ": ");
             for (int i = 0; i < menuItem.totalSold; i++) {
                 System.out.print("*");
             }
             System.out.println();
-        }
+        } */
     }
     
     public void closeTable(int tableNumber){
@@ -245,8 +248,12 @@ public class CafeSystem {
         stmt.setInt(1, tableNumber);
         
         ResultSet resultSet = stmt.executeQuery();
-        resultSet.next();
-        table = new Table(tableNumber,resultSet.getInt(3));
+        if(resultSet.next()){
+          table = new Table(tableNumber,resultSet.getInt(3));}
+        else 
+         {
+            System.out.println("Table: "+ tableNumber + "Not Found in DB.");
+         }
         }catch(SQLException e){
             e.printStackTrace();
         }  

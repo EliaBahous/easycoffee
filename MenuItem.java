@@ -4,14 +4,79 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class MenuItem {
-    String itemName;
-    double price;
-    double quantityInStock;
-    int totalSold;
-    double discount;
-    int itemId;
-    DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-    String connectionString = dbConnection.getConnectionString();
+    private String itemName;
+    private double price;
+    private double quantityInStock;
+    private int totalSold;
+    private double discount;
+    private int itemId;
+    private DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+    private String connectionString = dbConnection.getConnectionString();
+    
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getQuantityInStock() {
+        return quantityInStock;
+    }
+
+    public void setQuantityInStock(double quantityInStock) {
+        this.quantityInStock = quantityInStock;
+    }
+
+    public int getTotalSold() {
+        return totalSold;
+    }
+
+    public void setTotalSold(int totalSold) {
+        this.totalSold = totalSold;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+    }
+
+    public DatabaseConnection getDbConnection() {
+        return dbConnection;
+    }
+
+    public void setDbConnection(DatabaseConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    public String getConnectionString() {
+        return connectionString;
+    }
+
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
+    }
+
     public MenuItem(String itemName, double price, double quantityInStock) {
         this.itemName = itemName;
         this.price = price;
