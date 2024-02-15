@@ -5,8 +5,9 @@ public class CafeEasy {
         cafeSystem.addTable(251);
         //cafeSystem.addTable(422);
 
-         cafeSystem.addMenuItem("Cheese", 15.99, 100);
-       // cafeSystem.addMenuItem("Cake", 3.99, 50); 
+         cafeSystem.addMenuItem("Cheese", 15.99, 100,100);
+          cafeSystem.addMenuItem("Cake", 3.99, 50,50); 
+          cafeSystem.addMenuItem("Coffee", 18.0, 1000, 10000);
         //cafeSystem.applyDiscount("Coffee", 13); 
        
        Waiter waiter = new Waiter();

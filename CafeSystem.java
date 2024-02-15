@@ -54,8 +54,8 @@ public class CafeSystem {
     
     }
 
-    public void addMenuItem(String itemName, double price, double quantityInStock) {
-        String query = "INSERT INTO [dbo].[MenuItems] ([item_name], [price], [quantity_in_stock], [total_sold], [discount]) VALUES (?, ?, ?, ?, ?)";
+    public void addMenuItem(String itemName, double price, double quantityInStock, int expectedAmount) {
+        String query = "INSERT INTO [dbo].[MenuItems] ([item_name], [price], [quantity_in_stock], [total_sold], [discount], [expectedAmount]) VALUES (?, ?, ?, ?, ?, ?)";
         String selectSql = "SELECT COUNT(*) AS itemExists FROM [dbo].[MenuItems] WHERE [item_name] = ?";
 
         try (Connection connection = DriverManager.getConnection(connectionString);
@@ -78,6 +78,7 @@ public class CafeSystem {
         //default values for total sold and discount
         stmt.setInt(4, 0); 
         stmt.setInt(5, 0); 
+        stmt.setInt(6, expectedAmount);
 
         // Execute the query
         int rowsAffected = stmt.executeUpdate();

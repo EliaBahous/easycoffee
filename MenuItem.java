@@ -10,9 +10,10 @@ public class MenuItem {
     private int totalSold;
     private double discount;
     private int itemId;
+    private int expectedAmount; // New attribute to represent the expected amount
     private DatabaseConnection dbConnection = DatabaseConnection.getInstance();
     private String connectionString = dbConnection.getConnectionString();
-    
+
     public String getItemName() {
         return itemName;
     }
@@ -77,20 +78,22 @@ public class MenuItem {
         this.connectionString = connectionString;
     }
 
-    public MenuItem(String itemName, double price, double quantityInStock) {
+    public MenuItem(String itemName, double price, double quantityInStock, int expectedAmount) {
         this.itemName = itemName;
         this.price = price;
         this.quantityInStock = quantityInStock;
         this.totalSold = 0;
         this.discount = 0; //intially no discount
+        this.expectedAmount = expectedAmount;
     }
 
-    public MenuItem(String itemName, double price, double quantityInStock, int total_sold,double discount) {
+    public MenuItem(String itemName, double price, double quantityInStock, int total_sold,double discount, int expectedAmount) {
         this.itemName = itemName;
         this.price = price;
         this.quantityInStock = quantityInStock;
         this.totalSold = total_sold;
-        this.discount = discount; //intially no discount
+        this.discount = discount; //intially no discount  
+        this.expectedAmount = expectedAmount;
     }
 
     // when placing an order we have menu item id 
@@ -156,5 +159,13 @@ public class MenuItem {
       } catch (SQLException e) {
           e.printStackTrace();
       }
+    }
+
+    public int getExpectedAmount() {
+        return expectedAmount;
+    }
+
+    public void setExpectedAmount(int expectedAmount) {
+        this.expectedAmount = expectedAmount;
     }
 }
