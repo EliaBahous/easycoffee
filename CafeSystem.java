@@ -213,6 +213,7 @@ public class CafeSystem {
     }
 
     public void generateMonthlySalesGraph() {
+        System.out.println(); // adding space before generating the graph
         System.out.println("Monthly Sales Graph:");
       /*   for (MenuItem menuItem : menu) {
           
