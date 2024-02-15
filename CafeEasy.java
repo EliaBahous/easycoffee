@@ -19,6 +19,7 @@ public class CafeEasy {
         Customer customer = new Customer("John Doe");
         customer.payBill(cafeSystem,251);
 
+        cafeSystem.checkLowStock();
        // cafeSystem.generateMonthlySalesReport();
        // cafeSystem.generateMonthlySalesGraph();  
     }

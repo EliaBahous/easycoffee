@@ -171,12 +171,28 @@ public class CafeSystem {
     }
 
     public void checkLowStock() {
-      /*   for (MenuItem menuItem : menu) {
-            if (!lowStockItems.contains(menuItem.itemName) && menuItem.quantityInStock < LOW_STOCK_THRESHOLD * menu.size()) {
-                lowStockItems.add(menuItem.itemName);
-                System.out.println("Low stock alert: " + menuItem.itemName);
-            }
-        }*/
+
+        String query = "SELECT * FROM [dbo].[MenuItems];";
+        try(Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement stmt = connection.prepareStatement(query)){
+        
+        ResultSet resultSet = stmt.executeQuery();
+        while(resultSet.next()){
+            String itemName = resultSet.getString("item_name");
+            int quantityInStock = resultSet.getInt("quantity_in_stock");
+            int expectedAmount = resultSet.getInt("expectedAmount");
+            if ( quantityInStock < LOW_STOCK_THRESHOLD * expectedAmount) {
+                System.out.println("Low stock alert: " + itemName);
+            }else
+              {
+                System.out.println("stock is enough for item: " + itemName);
+              }
+        }
+       
+        }catch(SQLException e){
+            e.printStackTrace();
+        }  
+        
     }
 
     public void generateMonthlySalesReport() {
