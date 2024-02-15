@@ -171,7 +171,6 @@ public class CafeSystem {
     }
 
     public void checkLowStock() {
-
         String query = "SELECT * FROM [dbo].[MenuItems];";
         try(Connection connection = DriverManager.getConnection(connectionString);
         PreparedStatement stmt = connection.prepareStatement(query)){
@@ -197,20 +196,46 @@ public class CafeSystem {
 
     public void generateMonthlySalesReport() {
         System.out.println("Monthly Sales Report:");
-      /*  for (MenuItem menuItem : menu) {
-            System.out.println(menuItem.itemName + " - Total Sold: " + menuItem.totalSold);
-        } */
+        String query = "SELECT * FROM [dbo].[MenuItems];";
+        try(Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement stmt = connection.prepareStatement(query)){
+        
+        ResultSet resultSet = stmt.executeQuery();
+        while(resultSet.next()){
+            String itemName = resultSet.getString("item_name");
+            int totalSold = resultSet.getInt("total_sold");
+            System.out.println(itemName + " - Total Sold: " + totalSold);
+        }
+       
+        }catch(SQLException e){
+            e.printStackTrace();
+        }  
     }
 
     public void generateMonthlySalesGraph() {
         System.out.println("Monthly Sales Graph:");
       /*   for (MenuItem menuItem : menu) {
-            System.out.print(menuItem.itemName + ": ");
-            for (int i = 0; i < menuItem.totalSold; i++) {
+          
+        } */
+
+        String query = "SELECT * FROM [dbo].[MenuItems];";
+        try(Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement stmt = connection.prepareStatement(query)){
+        
+        ResultSet resultSet = stmt.executeQuery();
+        while(resultSet.next()){
+            String itemName = resultSet.getString("item_name");
+            int totalSold = resultSet.getInt("total_sold");
+            System.out.print(itemName + ": ");
+            for (int i = 0; i < totalSold; i++) {
                 System.out.print("*");
             }
             System.out.println();
-        } */
+        }
+       
+        }catch(SQLException e){
+            e.printStackTrace();
+        } 
     }
     
     public void closeTable(int tableNumber){

@@ -20,7 +20,7 @@ public class CafeEasy {
         customer.payBill(cafeSystem,251);
 
         cafeSystem.checkLowStock();
-       // cafeSystem.generateMonthlySalesReport();
-       // cafeSystem.generateMonthlySalesGraph();  
+        cafeSystem.generateMonthlySalesReport();
+        cafeSystem.generateMonthlySalesGraph();  
     }
 }
