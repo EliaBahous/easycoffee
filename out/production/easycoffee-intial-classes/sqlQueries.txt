@@ -1,0 +1,35 @@
+CREATE TABLE Tables (
+    table_id INT PRIMARY KEY IDENTITY,
+    table_number INT UNIQUE,
+    is_occupied BIT DEFAULT 0
+);
+
+--Drop Table Tables;
+
+CREATE TABLE MenuItems (
+    item_id INT PRIMARY KEY IDENTITY,
+    item_name VARCHAR(255),
+    price DECIMAL(10, 2),
+    quantity_in_stock DECIMAL(10, 2),
+    total_sold INT,
+    discount DECIMAL(5, 2)
+);
+
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY IDENTITY,
+    menu_item_id INT,
+    quantity INT,
+    order_date DATETIME,
+    delivery_date DATETIME,
+    CONSTRAINT FK_MenuItem_Order FOREIGN KEY (menu_item_id) REFERENCES MenuItems(item_id)
+);
+
+-- Insert values to Tables(adding 2 tables)
+insert into [dbo].[Tables] values (1,0);
+insert into [dbo].[Tables] values (2,0);
+
+--
+insert into [dbo].[MenuItems] values 
+('Coffe',14,10,0,0);
+insert into [dbo].[MenuItems] values 
+('Cake',35,10,0,0);
