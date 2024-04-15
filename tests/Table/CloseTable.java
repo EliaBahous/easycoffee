@@ -1,9 +1,8 @@
-package tests.OrderProduct;
+package tests.Table;
 
 import java.io.IOException;
 
 import org.junit.Test;
-
 
 import java.net.URL;
 
@@ -27,17 +26,17 @@ class ProductOrdered {
     }
 }
 
-public class orderProductTests {
+public class CloseTable {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void orderProduct() throws IOException {
-        URL obj = new URL( "http://localhost:4567/adjust-table");
+    public void CloseTableAndPay() throws IOException {
+        URL obj = new URL("http://localhost:4567/pay-bill");
         HttpURLConnection httpURLConnection = (HttpURLConnection) obj.openConnection();
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setRequestProperty("Content-Type", "application/json");
         httpURLConnection.setDoOutput(true);
-        String jsonInputString = "{\"tableNumber\": 1, \"itemId\": 101010, \"quantity\": 1}";
+        String jsonInputString = "{\"tableNumber\": 1}";
         try (OutputStream os = httpURLConnection.getOutputStream()) {
             byte[] input = jsonInputString.getBytes("utf-8");
             os.write(input, 0, input.length);
@@ -59,7 +58,7 @@ public class orderProductTests {
             // print result
             System.out.println(response.toString());
 
-            assertEquals(response.toString().contains("{\"success\":true}"), true);
+            assertEquals(response.toString().contains("Table 1 is Available For New Orders"), true);
 
         } else {
             System.out.println("GET request not worked");
@@ -69,8 +68,8 @@ public class orderProductTests {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void checkProductAfterOrder() throws IOException {
-        URL obj = new URL( "http://localhost:4567/get-ordered-items");
+    public void closeTableAlreadyClosed() throws IOException {
+        URL obj = new URL("http://localhost:4567/pay-bill");
         HttpURLConnection httpURLConnection = (HttpURLConnection) obj.openConnection();
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setRequestProperty("Content-Type", "application/json");
@@ -96,7 +95,7 @@ public class orderProductTests {
             // print result
             System.out.println(response.toString());
 
-            assertEquals(response.toString().contains("{\"name\":\"Coffee\",\"price\":14.0,\"quantity\":1.0}"),
+            assertEquals(response.toString().contains("Table 1 is Available For New Orders"),
                     true);
 
         } else {
@@ -104,7 +103,5 @@ public class orderProductTests {
         }
 
     }
-
-
 
 }

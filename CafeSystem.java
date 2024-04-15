@@ -275,7 +275,7 @@ public class CafeSystem {
         }
     }
 
-    public void closeTable(int tableNumber) {
+    public String closeTable(int tableNumber) {
         String updateQuery = "UPDATE Tables SET is_occupied = ? WHERE table_number = ?";
 
         try (Connection connection = DriverManager.getConnection(connectionString);
@@ -285,12 +285,13 @@ public class CafeSystem {
             stmt.setInt(2, tableNumber);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Table " + tableNumber + " is Available For New Orders");
+                return "Table " + tableNumber + " is Available For New Orders";
             } else {
-                System.out.println("Could'nt Free table" + tableNumber + "After Payment");
+                return "Could'nt Free table" + tableNumber + "After Payment";
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return "ERROR";
         }
     }
 

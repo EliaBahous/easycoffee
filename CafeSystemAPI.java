@@ -28,8 +28,8 @@ public class CafeSystemAPI {
             try {
                 PayBillRequest payBillRequest = gson.fromJson(req.body(), PayBillRequest.class);
                 this.cafeSystem.recordPayment(payBillRequest.tableNumber);
-                this.cafeSystem.closeTable(payBillRequest.tableNumber);
-                return gson.toJson(new String("Thanks for visiting us..."));
+                String toSend = this.cafeSystem.closeTable(payBillRequest.tableNumber);
+                return gson.toJson(toSend);
             } catch (Exception error) {
                 return gson.toJson(new boolResponse(false));
             }
