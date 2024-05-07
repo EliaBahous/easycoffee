@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant Tables</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Cafe Easy</h2>
+    <ul>
+      <li><a href="updateProduct.html">Stock Manager</a></li>
+      <li><a href="historyPage.html">History of Orders</a></li>
+      <li><a href="discountPage.html">Discount Page</a></li>
+      <li><a href="addItemPage.html">Add Menu Item Page</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="tables" id="tables">
+
+        <script>
+
+            fetch('/get-number-of-tables')
+            .then(response => response.json())
+            .then(data => {
+                numberOfTables = data["numberOfTables"];
+                for(var i=0; i<numberOfTables; i++){
+                const newRow = document.createElement('tables');
+
+                    newRow.innerHTML = `<div class="table" onclick="openOrdersPage(${i+1})">
+                                <img src="images/table.jpeg" alt="Table ${i+1}">
+                                <p>Table ${i+1}</p>
+                                </div>`;
+                    document.getElementById('tables').appendChild(newRow);
+                }
+            })
+            function addTable(){
+                fetch('/add-table')
+                .then(response => response.json())
+                .then(data => {
+                      console.log("Added new table");
+
+                });
+                setTimeout(function(){
+                    location.reload();
+                }, 500);
+            }
+
+        </script>
+      <div class="table" onclick="addTable()">
+        <!-- Your form fields here -->
+        <img src="images/add-button.png">
+        <p>Add Table</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openOrdersPage(tableNumber) {
+      window.location.href = "/orders.html?table=" + tableNumber;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+CREATE DATABASE easycoffee;
+use easycoffee;
+
+CREATE TABLE Manager(
+manager_id varchar(255) NOT NULL,
+first_name varchar(255) NOT NULL,
+last_name varchar(255) NOT NULL,
+birthdate datetime NULL,
+phone_numberManager varchar(255) NOT NULL,
+PRIMARY KEY (manager_id)
+);
+
+
+CREATE TABLE Orders(
+order_id varchar(255) NOT NULL,
+menu_item_id int NULL,
+quantity int NULL,
+order_date datetime NULL,
+delivery_date datetime NULL,
+table_number int NULL,
+paid int,
+PRIMARY KEY (order_id)
+);
+
+
+CREATE TABLE MenuItems(
+item_id int NOT NULL,
+item_name varchar(255) NULL,
+price decimal(10, 2) NULL,
+quantity_in_stock decimal(10, 2) NULL,
+total_sold int NULL,
+discount double NULL,
+expectedAmount int NULL,
+PRIMARY KEY (item_id)
+);
+
+CREATE TABLE Tables(
+table_id int NOT NULL,
+table_number int NULL,
+is_occupied bit NULL,
+PRIMARY KEY(table_id)
+);
+
+ALTER TABLE Orders
+ADD FOREIGN KEY (menu_item_id) REFERENCES MenuItems(item_id);
+
+
+insert into MenuItems (item_name, item_id, price, quantity_in_stock, total_sold, discount, expectedAmount) values ("Coffe",101010, 14,10, 0, 0, 14);
+insert into MenuItems (item_name, item_id, price, quantity_in_stock, total_sold, discount, expectedAmount) values ("Cake",101011, 10,35, 0, 0, 35);
+
+insert into Tables values (1,0,0);
+insert into Tables values (3,0,0);
+insert into Tables values (2,0,0);
+

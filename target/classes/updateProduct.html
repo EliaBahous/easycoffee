@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Cafe Easy</h2>
+    <ul>
+        <li><a href="updateProduct.html">Stock Manager</a></li>
+        <li><a href="historyPage.html">History of Orders</a></li>
+        <li><a href="discountPage.html">Discount Page</a></li>
+        <li><a href="addItemPage.html">Add Menu Item Page</a></li>
+        <li><a href="/">Back</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="header">
+      <h1>Stock Manager</h1>
+    </div>
+    <div class="container">
+        <h2>Apply Item Quantity</h2>
+        <div class="drop-container">
+            <label for="item">Drop Item:</label>
+            <select id="item">
+                <script>
+                    const urlGetItems = '/get-items';
+                    fetch(urlGetItems)
+                    .then(response => response.json())
+                    .then(data => {
+                        var x = document.getElementById("item");
+                        console.log(data["itemList"]);
+                        for (var i = 0; i < data["itemList"].length; i++) {
+                            console.log(data["itemList"][i]["name"]);
+                            var option = document.createElement("option");
+                            option.text = data["itemList"][i]["name"];
+                            option.id = data["itemList"][i]["id"];
+                            option.value = data["itemList"][i]["name"];
+                            x.add(option, x[-1]);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                </script>
+            </select>
+        </div>
+        <div class="quantity-container">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" min="1" value="1">
+        </div>
+        <button id="apply-btn">Apply Quantity</button>
+        <div id="result"></div>
+
+        <script>
+            document.getElementById('apply-btn').addEventListener('click', function() {
+                
+                const selectedItem = document.getElementById('item');
+                itemId = selectedItem.options[selectedItem.selectedIndex].id;
+                itemName = selectedItem.options[selectedItem.selectedIndex].value;
+                const quantity = parseInt(document.getElementById('quantity').value);
+                
+                // Replace this with your logic to apply the quantity to the specific item
+
+                if(quantity>=0){
+                    const url = '/set-quantity';
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const data ={"itemId": itemId, "itemQty": quantity};
+
+
+                    // JSON data to be sent in the request body
+
+                    // Options for the fetch request
+                    const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                    };
+
+                    // Make the POST request
+                    fetch(url, requestOptions)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+
+                    })
+                    
+                    const result = `Applied ${quantity} to ${itemName}`;
+                    document.getElementById('result').innerText = result;
+                }
+
+            });
+
+        </script>
+    </div>
+
+  </div>
+
+  <script>
+
+
+
+  </script>
+</body>
+</html>

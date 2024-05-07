@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script>
+        const dataToVisualize = {};
+        const xValues = [];
+        const yValues = [];
+        const barColors = [];
+
+        function setData(dataToVisualize){
+            console.log(Object.keys(dataToVisualize).length);
+            for(let i=0; i<Object.keys(dataToVisualize).length;i++){
+                xValues.push(dataToVisualize[i]["itemName"]);
+                console.log(i);
+            }
+            for(let i=0; i<Object.keys(dataToVisualize).length;i++){
+                yValues.push(dataToVisualize[i]["counter"]);
+            }
+        }
+        function getOrders(){
+
+            const url = 'http://127.0.0.1:8080/get-orders';
+
+            const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+            };
+
+            // Make the POST request
+            fetch(url, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                Object.assign(dataToVisualize, data);
+                setData(dataToVisualize);
+                while (barColors.length < xValues.length) {
+                    do {
+                        var color = Math.floor((Math.random()*1000000)+1);
+                    } while (barColors.indexOf(color) >= 0);
+                    barColors.push("#" + ("000000" + color.toString(16)).slice(-6));
+                    new Chart("myChart", {
+                      type: "pie",
+                      data: {
+                        labels: xValues,
+                        datasets: [{
+                          backgroundColor: barColors,
+                          data: yValues
+                        }]
+                      }
+                    });
+                }
+            });
+        }
+
+        getOrders();
+
+
+
+
+    </script>
+</head>
+<body>
+<div class="sidebar">
+    <h2>Cafe Easy</h2>
+    <ul>
+        <li><a href="updateProduct.html">Stock Manager</a></li>
+        <li><a href="historyPage.html">History of Orders</a></li>
+        <li><a href="discountPage.html">Discount Page</a></li>
+        <li><a href="addItemPage.html">Add Menu Item Page</a></li>
+        <li><a href="/">Back</a></li>
+
+    </ul>
+</div>
+
+<div class="content">
+    <div class="header">
+        <h1>History Manager</h1>
+    </div>
+    <div class="container">
+        <h2>History Item Order</h2>
+        <canvas id="myChart" style="width:100%"></canvas>
+
+    </div>
+
+</div>
+
+
+</body>
+</html>
