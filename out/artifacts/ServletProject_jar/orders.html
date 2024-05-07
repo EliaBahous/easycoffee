@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Cafe Easy</h2>
+    <ul>
+      <li><a href="updateProduct.html">Stock Manager</a></li>
+      <li><a href="historyPage.html">History of Orders</a></li>
+      <li><a href="discountPage.html">Discount Page</a></li>
+      <li><a href="addItemPage.html">Add Menu Item Page</a></li>
+      <li><a href="/">Back</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="header">
+      <h1>Orders for Table <span id="tableNumber"></span></h1>
+    </div>
+
+    <div class="orders">
+      <table id="ordersTable">
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Price</th>
+        </tr>
+
+        <tr>
+          <td>
+            <select id="drink-select">
+
+            </select>
+            <script>
+
+                fetch("/get-items")
+                .then(response => response.json())
+                .then(data => {
+                    var x = document.getElementById("drink-select");
+                    console.log(data["itemList"]);
+                    for (var i = 0; i < data["itemList"].length; i++) {
+                        if(data["itemList"][i]["quantity"]>0){
+                            console.log(data["itemList"][i]["name"]);
+                            var option = document.createElement("option");
+                            option.text = data["itemList"][i]["name"];
+                            option.id = data["itemList"][i]["id"];
+                            option.value = data["itemList"][i]["name"];
+                            x.add(option, x[-1]);
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+
+            </script>
+          </td>
+          <td><input type="number" id="drink-quantity" value="1" min="1"></td>
+          <td><button onclick="addOrderDrink()">Add Order</button></td>
+        </tr>
+        <script>
+            const url = '/get-ordered-items';
+            urlParams = new URLSearchParams(window.location.search);
+            const data = {"tableNumber":  urlParams.get('table')};
+
+
+            // JSON data to be sent in the request body
+
+            // Options for the fetch request
+            const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            };
+            let total = 0;
+            // Make the POST request
+            fetch(url, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                for (var i = 0; i < data["itemList"].length; i++) {
+                    if(data["itemList"][i]["quantity"]>0)
+                        addTableRow(data["itemList"][i]["id"], data["itemList"][i]["name"], data["itemList"][i]["quantity"], data["itemList"][i]["price"]);
+                        total += parseInt(data["itemList"][i]["quantity"])*parseInt(data["itemList"][i]["price"]);
+                        console.log("Prod"+i);
+
+                        console.log(data["itemList"][i]["quantity"]);
+                        console.log(data["itemList"][i]["price"]);
+                        console.log(parseInt(data["itemList"][i]["quantity"])*parseInt(data["itemList"][i]["price"]));
+                }
+                console
+                document.getElementById("quantity").innerHTML = "Total:" +  total;
+            })
+            .catch(error => console.error('Error:', error));
+        </script>
+      </table>
+    </div>
+    <div class="container">
+      <div class="quantity-container">
+        <label id="quantity"></label>
+      </div>
+        <button class ="button red-button" onclick="cancelOrders()">Cancel Orders</button>
+        <button class ="button" onclick="payOrder()">Pay Orders</button>
+    </div>
+    
+  </div>
+
+  <script>
+    // Extract table number from URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const tableNumber = urlParams.get('table');
+    document.getElementById('tableNumber').innerText = tableNumber;
+
+    function addOrderDrink() {
+
+      const drinkSelect = document.getElementById('drink-select');
+      const drinkQuantity = document.getElementById('drink-quantity').value;
+      text = drinkSelect.options[drinkSelect.selectedIndex].id;
+      console.log(text);
+      console.log(drinkQuantity);
+      addProductToTable(text, drinkQuantity);
+      setTimeout(function(){
+            location.reload();
+        }, 500);
+
+
+    }
+    function addProductToTable(id, quantity){
+            const url = '/adjust-table';
+            const urlParams = new URLSearchParams(window.location.search);
+            const data ={"tableNumber": urlParams.get('table'), "itemId": id, "quantity": quantity};
+
+
+            // JSON data to be sent in the request body
+
+            // Options for the fetch request
+            const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            };
+
+            // Make the POST request
+            fetch(url, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+            })
+            
+    }
+    function addTableRow(id, item, quantity, price) {
+      var table = document.getElementById('ordersTable');
+      var rows = table.getElementsByTagName('tr');
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td>${item}</td>
+        <td>${quantity}</td>
+        <td>${price}</td>
+        <td><button id="${id}" onclick="removeProduct(this.id)">X</button></td>
+      `;
+
+      document.getElementById('ordersTable').appendChild(newRow);
+    }
+
+    function removeProduct(clicked_id){
+        console.log(clicked_id);
+        addProductToTable(clicked_id, 0);
+        setTimeout(function(){
+            location.reload();
+        }, 500);
+    }
+    function cancelOrders(){
+
+        const url = '/cancel-orders';
+        const urlParams = new URLSearchParams(window.location.search);
+        const data ={"tableNumber": urlParams.get('table')};
+
+
+        // JSON data to be sent in the request body
+
+        // Options for the fetch request
+        const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+        };
+
+        // Make the POST request
+        fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+        })
+        setTimeout(function(){
+            location.reload();
+        }, 500);
+    }
+
+    function payOrder(){
+        const url = '/pay-bill';
+        const urlParams = new URLSearchParams(window.location.search);
+        const data ={"tableNumber": urlParams.get('table')};
+
+
+        // JSON data to be sent in the request body
+
+        // Options for the fetch request
+        const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+        };
+
+        // Make the POST request
+        fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+        })
+        setTimeout(function(){
+            location.reload();
+        }, 500);
+    }
+  </script>
+</body>
+</html>
